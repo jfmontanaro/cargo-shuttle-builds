@@ -26,7 +26,7 @@ jobs:
     name: Build Shuttle
     needs: versions
     if: needs.versions.outputs.upstream_version != needs.versions.outputs.local_version
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}-latest
     strategy:
       matrix:
         include:
@@ -44,6 +44,7 @@ jobs:
           repository: shuttle-hq/shuttle
 
       - name: Install pkg-config
+        if: matrix.os == ubuntu
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
