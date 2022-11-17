@@ -44,7 +44,7 @@ jobs:
           repository: shuttle-hq/shuttle
 
       - name: Install pkg-config
-        if: matrix.os == ubuntu
+        if: matrix.os == 'ubuntu'
         env:
           DEBIAN_FRONTEND: noninteractive
         run: |
