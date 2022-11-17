@@ -71,4 +71,5 @@ jobs:
           mv cargo-shuttle-macos/cargo-shuttle upload/cargo-shuttle_x86_64-apple-darwin
 
           cd upload
+          echo ${{ secrets.RELEASE_TOKEN }} | gh auth login --with-token
           gh release create ${{ needs.version.outputs.upstream_version }} --repo jfmontanaro/cargo-shuttle-builds --notes '' *
