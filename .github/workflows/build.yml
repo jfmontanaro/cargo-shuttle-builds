@@ -24,9 +24,18 @@ jobs:
 
   build:
     name: Build Shuttle
-    runs-on: ubuntu-latest
     needs: versions
     if: needs.versions.outputs.upstream_version != needs.versions.outputs.local_version
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu
+            filename: cargo-shuttle
+          - os: windows
+            filename: cargo-shuttle.exe
+          - os: macos
+            filename: cargo-shuttle
     steps:
       - id: checkout
         name: Checkout Shuttle repository
@@ -34,17 +43,20 @@ jobs:
         with:
           repository: shuttle-hq/shuttle
 
-      - id: build-linux
-        name: Build for linux
+      - name: Install pkg-config
+        env:
+          DEBIAN_FRONTEND: noninteractive
         run: |
           sudo apt update
-          sudo apt install -y musl-tools
-          rustup target install x86_64-unknown-linux-musl
-          cargo build -p cargo-shuttle --release --target x86_64-unknown-linux-musl
+          sudo apt install -y pkg-config
+
+      - id: build-${{ matrix.os }}
+        name: Build for ${{ matrix.os }}
+        run: cargo build -p cargo-shuttle --release
 
       - id: upload-artifact
         name: Upload binary artifact
         uses: actions/upload-artifact@v3
         with:
-          name: cargo-shuttle-linux
-          path: target/release/cargo-shuttle
+          name: cargo-shuttle-${{ matrix.os }}
+          path: target/release/${{ filename }}
