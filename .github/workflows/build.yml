@@ -3,27 +3,23 @@ on: workflow_dispatch
   # schedule:
     # - cron: '38 5 * * *'
 jobs:
-  check:
+  versions:
     name: Check whether build is necessary
     runs-on: ubuntu-latest
     outputs:
       upstream_version: ${{ steps.versions.outputs.upstream_version }}
       local_version: ${{ steps.versions.outputs.local_version }}
     steps:
-      - name: Checkout Shuttle repository
-        uses: actions/checkout@v3
-        with: 
-          repository: shuttle-hq/shuttle
-
-      - name: Get latest versions of Shuttle and local build
+      - name: Query Github API for latest versions
         id: versions
+        env:
+          ACTION_REPOSITORY: ${{ github.action_repository }}
         run: |
           UPSTREAM_VERSION=$(curl -fsSL https://api.github.com/repos/shuttle-hq/shuttle/releases | jq -r '.[0].tag_name')
           echo "upstream_version=$UPSTREAM_VERSION" >> $GITHUB_OUTPUT
-          LOCAL_VERSION=$(curl -fsSL https://api.github.com/repos/${{github.action_repository}}/releases | jq -r '.[0].tag_name')
-          echo "local_version=$LOCAL_VERSION"
-          if [[ $UPSTREAM_VERSION != $LOCAL_VERSION ]]; then
-            echo "Update not needed: $UPSTREAM_VERSION == $LOCAL_VERSION"
+          LOCAL_VERSION=$(curl -fsSL https://api.github.com/repos/$ACTION_REPOSITORY/releases | jq -r '.[0].tag_name')
+          if [[ $LOCAL_VERSION == $UPSTREAM_VERSION ]]; then
+            echo "Update not needed: $LOCAL_VERSION == $UPSTREAM_VERSION"
           else
             echo "Update needed: $LOCAL_VERSION => $UPSTREAM_VERSION"
           fi
