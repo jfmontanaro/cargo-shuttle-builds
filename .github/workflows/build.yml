@@ -43,14 +43,6 @@ jobs:
         with:
           repository: shuttle-hq/shuttle
 
-      - name: Install pkg-config
-        if: matrix.os == 'ubuntu'
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          sudo apt update
-          sudo apt install -y pkg-config
-
       - name: Build cargo-shuttle
         run: cargo build -p cargo-shuttle --release
 
