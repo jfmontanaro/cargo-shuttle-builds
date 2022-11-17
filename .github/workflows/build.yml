@@ -12,12 +12,10 @@ jobs:
     steps:
       - name: Query Github API for latest versions
         id: versions
-        env:
-          ACTION_REPOSITORY: ${{ github.action_repository }}
         run: |
           UPSTREAM_VERSION=$(curl -fsSL https://api.github.com/repos/shuttle-hq/shuttle/releases | jq -r '.[0].tag_name')
           echo "upstream_version=$UPSTREAM_VERSION" >> $GITHUB_OUTPUT
-          LOCAL_VERSION=$(curl -fsSL https://api.github.com/repos/$ACTION_REPOSITORY/releases | jq -r '.[0].tag_name')
+          LOCAL_VERSION=$(curl -fsSL https://api.github.com/repos/jfmontanaro/cargo-shuttle-builds/releases | jq -r '.[0].tag_name')
           if [[ $LOCAL_VERSION == $UPSTREAM_VERSION ]]; then
             echo "Update not needed: $LOCAL_VERSION == $UPSTREAM_VERSION"
           else
