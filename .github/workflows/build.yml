@@ -1,5 +1,6 @@
 name: Build and release cargo-shuttle
-on:
+on: 
+  workflow_dispatch: {}
   schedule:
     - cron: '38 5 * * *'
 jobs:
@@ -62,9 +63,13 @@ jobs:
       - build
     steps:
       - id: download-artifacts
+        name: Download artifacts
         uses: actions/download-artifact@v3
 
       - id: create-release
+        name: Create Github release and upload assets
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           mkdir upload
           mv cargo-shuttle-ubuntu/cargo-shuttle upload/cargo-shuttle_x86_64-unknown-linux-gnu
@@ -72,5 +77,4 @@ jobs:
           mv cargo-shuttle-macos/cargo-shuttle upload/cargo-shuttle_x86_64-apple-darwin
 
           cd upload
-          echo ${{ secrets.RELEASE_TOKEN }} | gh auth login --with-token
           gh release create ${{ needs.versions.outputs.upstream_version }} --repo jfmontanaro/cargo-shuttle-builds --notes '' *
