@@ -65,8 +65,9 @@ jobs:
 
       - id: create-release
         run: |
+          ls -R
           mkdir upload
-          mv cargo-shuttle-linux/cargo-shuttle upload/cargo-shuttle_x86_64-unknown-linux-gnu
+          mv cargo-shuttle-ubuntu/cargo-shuttle upload/cargo-shuttle_x86_64-unknown-linux-gnu
           mv cargo-shuttle-windows/cargo-shuttle.exe upload/cargo-shuttle_x86_64-pc-windows-msvc
           mv cargo-shuttle-macos/cargo-shuttle upload/cargo-shuttle_x86_64-apple-darwin
 
