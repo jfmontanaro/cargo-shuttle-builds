@@ -73,4 +73,4 @@ jobs:
 
           cd upload
           echo ${{ secrets.RELEASE_TOKEN }} | gh auth login --with-token
-          gh release create ${{ needs.version.outputs.upstream_version }} --repo jfmontanaro/cargo-shuttle-builds --notes '' *
+          gh release create ${{ needs.versions.outputs.upstream_version }} --repo jfmontanaro/cargo-shuttle-builds --notes '' *
