@@ -50,7 +50,7 @@ jobs:
 
       - id: upload-artifact
         name: Upload binary artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cargo-shuttle-${{ matrix.os }}
           path: target/release/${{ matrix.filename }}
@@ -64,7 +64,7 @@ jobs:
     steps:
       - id: download-artifacts
         name: Download artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - id: create-release
         name: Create Github release and upload assets
